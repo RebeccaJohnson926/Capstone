@@ -1,0 +1,4 @@
+com/seigneurin/spark/StreamingTweetsSimple.class
+com/seigneurin/spark/pojo/Tweet.class
+com/seigneurin/spark/TwitterStream.class
+com/seigneurin/spark/IndexTweets.class
