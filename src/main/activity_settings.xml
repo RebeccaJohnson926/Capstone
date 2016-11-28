@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/activity_settings">
+
+    <TextView
+        android:text="@string/Settings"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2"
+        android:textSize="35dp" />
+
+    <TextView
+        android:text="@string/dist"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:id="@+id/textView" />
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBar" />
+
+    <TextView
+        android:text="@string/Diet"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:id="@id/textView2" />
+
+    <CheckBox
+        android:text="@string/nut"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:id="@+id/checkBox_nut"
+        android:onClick="onCheckboxClicked"/>
+
+    <CheckBox
+        android:text="@string/lactose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:id="@+id/checkBox_lactose"
+        android:onClick="onCheckboxClicked"/>
+
+    <CheckBox
+        android:text="@string/veggie"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:id="@+id/checkBox_veggie"
+        android:onClick="onCheckboxClicked"/>
+
+</LinearLayout>
