@@ -1,8 +1,15 @@
-package com.seigneurin.spark.pojo;
+package capstone;
 
 /**
  * Created by Casey on 11/4/16.
+ * Edited by Rebecca on 11/28/16.
  */
+
+import org.apache.spark.SparkConf;
+import org.apache.spark.SparkContext;
+import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.sql.DataFrame;
+import org.apache.spark.sql.SQLContext;
 
 import java.util.Scanner;
 import java.io.File;
@@ -17,38 +24,81 @@ public class Sentiment {
 
         dictionary();
 
-        File file = new File("test.txt");
-        Scanner scan = new Scanner(file);
+        SparkConf sparkConf = new SparkConf()
+                .setAppName("Tweets Android")
+                .setMaster("local[2]");
+        SparkContext sc = new SparkContext(sparkConf);
 
-        String tweet;
-        int count = 1;
-        int sent = 0;
+        SQLContext sqlContext = new SQLContext(sc);
 
-        //while(scan.hasNext()) {
-        for(int j = 0; j < 2; j++) {
-            //sent = 0;
-            tweet = scan.nextLine();
-            //System.out.println(tweet);
-            int first = 0;
-            for(int i = 0; i < 7; i++) {
-                first = tweet.indexOf('"', first) + 1;
-                //System.out.println("index: "+first);
+        try {
+            DataFrame tweets = sqlContext.read().json("tweets1.json"); // load old tweets into a DataFrame
+            tweets.registerTempTable("tweetDF");
+
+            DataFrame tweetText = sqlContext.sql("SELECT text FROM tweetDF");
+            int numTweets = (int) tweetText.count();
+            System.out.println(numTweets);
+
+            //go through all tweets and analyze the sentiment of each
+            for(int i = 0; i<numTweets; i++) {
+
+                int count = 1;
+                int sent = 0;
+
+                String tweet = tweetText.take(numTweets)[i].toString();
+                tweet = tweet.substring(1, tweet.length() - 1);
+                System.out.println(tweet);
+
+                Scanner scan = new Scanner(tweet);
+                int temp = 0;
+
+                while (scan.hasNext()) {
+                    temp += find(scan.next().replace('#', '\t').toLowerCase());
+                }
+                System.out.println("Tweet: " + count + " " + temp);
+                count++;
+                sent += temp;
+
+                sent = sent / (count - 1);
+                System.out.println("Overall Sentiment: " + sent);
+
             }
 
-            String str = tweet.substring(first, tweet.indexOf('"', first));
-            System.out.println(str);
-            Scanner s = new Scanner(str);
-            int temp = 0;
-
-            while(s.hasNext()) {
-                temp += find(s.next());
-            }
-            System.out.println("Tweet: "+ count + " " + temp);
-            count ++;
-            sent += temp;
+        } catch (Exception e){
+            System.out.println(e);
         }
-        sent = sent/(count-1);
-        System.out.println("Overall Sentiment: "+sent);
+//        File file = new File("test.txt");
+//        Scanner scan = new Scanner(file);
+//
+//        String tweet;
+//        int count = 1;
+//        int sent = 0;
+//
+//        //while(scan.hasNext()) {
+//        for(int j = 0; j < 2; j++) {
+//            //sent = 0;
+//            tweet = scan.nextLine();
+//            //System.out.println(tweet);
+//            int first = 0;
+//            for(int i = 0; i < 7; i++) {
+//                first = tweet.indexOf('"', first) + 1;
+//                //System.out.println("index: "+first);
+//            }
+//
+//            String str = tweet.substring(first, tweet.indexOf('"', first));
+//            System.out.println(str);
+//            Scanner s = new Scanner(str);
+//            int temp = 0;
+//
+//            while(s.hasNext()) {
+//                temp += find(s.next());
+//            }
+//            System.out.println("Tweet: "+ count + " " + temp);
+//            count ++;
+//            sent += temp;
+//        }
+//        sent = sent/(count-1);
+//        System.out.println("Overall Sentiment: "+sent);
 
     }
 
