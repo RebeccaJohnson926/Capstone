@@ -14,8 +14,9 @@ public class Tweet {
     private Place place;
     private GeoLocation geoLocation;
     private String language;
+    private String sentiment;
 
-    public Tweet(String user, String text, Date createdAt, Place place, GeoLocation geoLocation, String language) {
+    public Tweet(String user, String text, Date createdAt, Place place, GeoLocation geoLocation, String language, String sent) {
         super();
         this.user = user;
         this.text = text;
@@ -23,6 +24,7 @@ public class Tweet {
         this.place = place;
         this.geoLocation = geoLocation;
         this.language = language;
+        this.sentiment = sent;
     }
 
     public String getUser() {
@@ -63,4 +65,10 @@ public class Tweet {
     public GeoLocation getGeoLocation() { return geoLocation; }
 
     public void setGeoLocation(GeoLocation geoLocation) { this.geoLocation = geoLocation; }
+
+    public int getSentiment(String text) {
+        text = text.toLowerCase();
+        return -500;
+    }
+
 }

@@ -1090,6 +1090,7 @@ goddamn	-3
 godsend	4
 good	3
 goodness	3
+gorgeous    3
 grace	1
 gracious	3
 grand	3

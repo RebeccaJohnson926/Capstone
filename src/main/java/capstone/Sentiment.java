@@ -4,6 +4,15 @@ package capstone;
  * Created by Casey on 11/4/16.
  * Edited by Rebecca on 11/28/16.
  */
+//https://www.tutorialspoint.com/spark_sql/spark_sql_useful_resources.htm
+//https://spark.apache.org/docs/1.5.1/api/java/org/apache/spark/sql/DataFrame.html
+
+import capstone.dataobjects.NaiveBayesKnowledgeBase;
+
+import java.io.*;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.*;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.SparkContext;
@@ -16,13 +25,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
+import static capstone.NaiveBayesClassifier.readLines;
+
 public class Sentiment {
 
     static HashMap<String, Integer> map = new HashMap<>();
 
     public static void main(String[] args) throws IOException {
-
-        dictionary();
 
         SparkConf sparkConf = new SparkConf()
                 .setAppName("Tweets Android")
@@ -31,98 +40,56 @@ public class Sentiment {
 
         SQLContext sqlContext = new SQLContext(sc);
 
+        //map of dataset files
+        Map<String, File> trainingFiles = new HashMap<>();
+        trainingFiles.put("Negative", new File("negative.txt"));
+        trainingFiles.put("Positive", new File("positive.txt"));
+
+        //loading examples in memory
+        Map<String, String[]> trainingExamples = new HashMap<>();
+        for(Map.Entry<String, File> entry : trainingFiles.entrySet()) {
+            trainingExamples.put(entry.getKey(), readLines(entry.getValue()));
+        }
+
+        //train classifier
+        NaiveBayes nb = new NaiveBayes();
+        nb.setChisquareCriticalValue(5.50); //0.01 pvalue   //originally set at 6.63
+        nb.train(trainingExamples);
+
+        //get trained classifier knowledgeBase
+        NaiveBayesKnowledgeBase knowledgeBase = nb.getKnowledgeBase();
+
+        nb = null;
+        trainingExamples = null;
+
+        //Use classifier
+        nb = new NaiveBayes(knowledgeBase);
+
+
         try {
-            DataFrame tweets = sqlContext.read().json("tweets1.json"); // load old tweets into a DataFrame
+            DataFrame tweets = sqlContext.read().json("restaurant.json"); // load old tweets into a DataFrame
             tweets.registerTempTable("tweetDF");
 
             DataFrame tweetText = sqlContext.sql("SELECT text FROM tweetDF");
-            int numTweets = (int) tweetText.count();
+            long numTweets = tweetText.count();
             System.out.println(numTweets);
 
             //go through all tweets and analyze the sentiment of each
             for(int i = 0; i<numTweets; i++) {
 
-                int count = 1;
-                int sent = 0;
-
-                String tweet = tweetText.take(numTweets)[i].toString();
+                String tweet = tweetText.take((int) numTweets)[i].toString();
                 tweet = tweet.substring(1, tweet.length() - 1);
                 System.out.println(tweet);
 
-                Scanner scan = new Scanner(tweet);
-                int temp = 0;
+                String sent = nb.predict(tweet);
 
-                while (scan.hasNext()) {
-                    temp += find(scan.next().replace('#', '\t').toLowerCase());
-                }
-                System.out.println("Tweet: " + count + " " + temp);
-                count++;
-                sent += temp;
-
-                sent = sent / (count - 1);
-                System.out.println("Overall Sentiment: " + sent);
-
+                System.out.println("Sentiment Prediction: " + sent);
             }
 
         } catch (Exception e){
             System.out.println(e);
         }
-//        File file = new File("test.txt");
-//        Scanner scan = new Scanner(file);
-//
-//        String tweet;
-//        int count = 1;
-//        int sent = 0;
-//
-//        //while(scan.hasNext()) {
-//        for(int j = 0; j < 2; j++) {
-//            //sent = 0;
-//            tweet = scan.nextLine();
-//            //System.out.println(tweet);
-//            int first = 0;
-//            for(int i = 0; i < 7; i++) {
-//                first = tweet.indexOf('"', first) + 1;
-//                //System.out.println("index: "+first);
-//            }
-//
-//            String str = tweet.substring(first, tweet.indexOf('"', first));
-//            System.out.println(str);
-//            Scanner s = new Scanner(str);
-//            int temp = 0;
-//
-//            while(s.hasNext()) {
-//                temp += find(s.next());
-//            }
-//            System.out.println("Tweet: "+ count + " " + temp);
-//            count ++;
-//            sent += temp;
-//        }
-//        sent = sent/(count-1);
-//        System.out.println("Overall Sentiment: "+sent);
 
     }
 
-    public static void dictionary() throws IOException {
-        File file = new File("AFIN-111.txt");
-        Scanner dic = new Scanner(file);
-
-        String temp;
-        int v;
-
-        while(dic.hasNext()) {
-            temp = dic.next().toString();
-            //System.out.println(temp);
-            v = Integer.parseInt(dic.next());
-            map.put(temp, v);
-        }
-    }
-
-    public static int find(String word) {
-        if(map.containsKey(word)) {
-            System.out.println("word: "+word+" value: "+map.get(word));
-            return map.get(word);
-        }
-        else
-            return 0;
-    }
 }

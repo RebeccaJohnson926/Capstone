@@ -21,6 +21,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.nio.charset.Charset;
 
+import static capstone.NaiveBayesClassifier.readLines;
+
 public class StreamTweets {
 
     public static void main(String[] args) throws Exception {
@@ -39,24 +41,39 @@ public class StreamTweets {
                 .set("es.index.auto.create", "true");
         JavaStreamingContext sc = new JavaStreamingContext(sparkConf, new Duration(5000));
 
-        // DataFrame for old tweets
+        //DataFrame for old tweets
         DataFrame oldTweets = null;
         JavaSparkContext jsc = sc.sparkContext();
         final SQLContext[] sqlContext = {new SQLContext(jsc)};
 
+
+
         // output file, save streamed twitter data as a json file
-        final File outputFile = new File("/Users/Rebecca/Desktop/spark-sandbox-master/tweets1.json");
-        if (outputFile.exists()) {
-            oldTweets = sqlContext[0].read().json("tweets1.json"); // load old tweets into a DataFrame
-            oldTweets.show();
-        }
+        final File outputFile = new File("/Users/Rebecca/Desktop/spark-sandbox-master/restaurant.json");
+//        if (outputFile.exists()) {
+//            oldTweets = sqlContext[0].read().json("tweets1.json"); // load old tweets into a DataFrame
+//            oldTweets.show();
+//        }
 
         //create a DStream of tweets
-        String[] filters = { "#thanksgiving" };
+        String[] filters = { "@mattsinthemkt", "@IvarsClam", "@pikeplchowder", "@BaccoCafeSea", "@RadiatorWhiskey",
+                                "@CuttersCrab", "@japonessa", "@PinkDoorSeattle", "@CrepedeFrance1", "@place_pigalle",
+                                "Kastoori Grill", "kastoori grill", "@canlis", "@MetGrill", "@thewalrusbar",
+                                "@dahlialounge", "@RN74Seattle", "@ElGauchoSteak", "@Spinasse", "@ILBistroSeattle",
+                                "@PalisadeSea", "@SaltySeattle", "@Andaluca", "@RockCreekSea", "@salareseattle",
+                                "@AOTTSeattle", "@AlturaSeattle", "@GoldfinchTavern", "@raysboathouse", "@SeriousPieDT",
+                                "@SeriousPiePike", "@ilcorvopasta", "@ElliottsSeattle", "@mamnoontoo", "@DelanceySeattle",
+                                "@WildGingerEats", "@TheCarlileRoom", "@NellsRestaurant", "@steelheaddiner", "@EatStoneburner",
+                                "@SandPointGrill1", "@LOWELLSBar", "@ChandlersCrab", "@Local360Seattle", "@curb_cuisine",
+                                "@DukesChowder", "@PiattiSeattle", "@petitcochonsea", "@brimmerheeltap", "@rione_xiii",
+                                "@BrunswickHunt", "@coastalkitchen", "@bramlingballard", "@13CoinsSeattle", "@blueacreseafood",
+                                "@CafeMunir", "@SeatownSeabar", "@oldstovebeer", "@pikebrewing", "@SeaCoffeeWorks",
+                                "@BeechersSeattle", "@CanonSeattle", "@TheVirginiaInn"};
+
 
         //get twitter stream as a string with only english tweets and containing filters
         JavaDStream<String> stream = TwitterUtils.createStream(sc, twitterAuth, filters)
-                .map(s -> new Tweet(s.getUser().getName(), s.getText(), s.getCreatedAt(), s.getPlace(), s.getGeoLocation(), s.getLang()))
+                .map(s -> new Tweet(s.getUser().getName(), s.getText(), s.getCreatedAt(), s.getPlace(), s.getGeoLocation(), s.getLang(), null))
                 .map(t -> mapper.writeValueAsString(t))
                 .filter(t -> t.contains("\"language\":\"en\""));
 
@@ -71,10 +88,12 @@ public class StreamTweets {
                 });
 
         sc.start();
-        sc.awaitTermination(30000);
+        sc.awaitTermination();
+//        sc.awaitTermination(500000);
         sc.stop();
 
     }
+
 }
 
 
