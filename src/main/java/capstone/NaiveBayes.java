@@ -23,7 +23,7 @@ public class NaiveBayes {
     }
 
     /**
-     * This constructor is used when we plan to train a new classifier.
+     * train a new classifier.
      */
     public NaiveBayes() {
         this(null);
@@ -240,15 +240,18 @@ public class NaiveBayes {
 
     /**
      * Predicts the category of a text by using an already trained classifier
-     * and returns its category.
+     * and returns its score.
+     *
+     * if category is positive, returns a positive score
+     * if category is negative, returns a negative score
      *
      * @param text
      * @return
      * @throws IllegalArgumentException
      */
-    public String predict(String text) throws IllegalArgumentException {
+    public Double predict(String text) throws IllegalArgumentException {
         if(knowledgeBase == null) {
-            throw new IllegalArgumentException("Knowledge Bases missing: Make sure you train first a classifier before you use it.");
+            throw new IllegalArgumentException("Knowledge base missing. Training must be run first");
         }
 
         //Tokenizes the text and creates a new document
@@ -288,6 +291,12 @@ public class NaiveBayes {
             }
         }
 
-        return maxScoreCategory; //return the category with highest score
+        if(maxScoreCategory.equals("Positive") && maxScore < 0)
+            maxScore = maxScore * -1;  //changes maxScore to positive Double value if it is negative
+
+        else if(maxScoreCategory.equals("Negative") && maxScore > 0)
+            maxScore = maxScore * -1;   //changes maxScore to negative Double value if it is positive
+
+        return maxScore; //returns a sentiment score
     }
 }

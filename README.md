@@ -1,20 +1,15 @@
-# Comptage des arbres dont la hauteur est non-nulle
+# Capstone 2017
 
-Cf. http://aseigneurin.github.io/2014/10/29/introduction-apache-spark.html
+Emily Bower
+Rebecca Johnson
+Casey Kaku
 
-- Télécharger les données avec le script `data/get-arbres.sh`
-- Lancer la classe TreesSample1
+# #BirdFeed (abstract)
 
-# Calcul de la hauteur moyenne des arbres
+#BirdFeed is a mobile application that allows users to view local Seattle restaurants and filter and sort restaurant data by popularity and/or cuisine. The app utilizes Spark Streaming to retrieve data from Twitter. Using a Naive Bayes Classifier, the app will calculate the sentiment of the tweet and adjusts the restaurant’s rating accordingly in a Firebase database. #BirdFeed also utilizes Android Studio, Google Play Services, and Twitter kits to present the data in a user-friendly way and provide in-app functions for the convenience of the user.
 
-Cf. http://aseigneurin.github.io/2014/11/01/initiation-mapreduce-avec-apache-spark.html
+# Sentiment Analysis
 
-- Télécharger les données avec le script `data/get-arbres.sh`
-- Lancer la classe TreesSample2
-
-# MapReduce et manipulation par clés sur les stats Wikipedia
-
-Cf. http://aseigneurin.github.io/2014/11/06/mapreduce-et-manipulations-par-cles-avec-apache-spark.html
-
-- Télécharger les données avec le script `data/get-wikipedia-pagecounts.sh`
-- Lancer la classe WikipediaMapReduceByKey
+This application will perform a Naive Bayes algorithm to predict the sentiment of a tweet.
+Tweets are streamed in The StreamTweets.java file using Apache Spark then saved to the restaurant.json file.
+Sentiment.java is used to process the the saved tweets and find their sentiment (scores < 0 are predicted negative sentiment, scores > 0 are predicted positive sentiment).

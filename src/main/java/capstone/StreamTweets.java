@@ -21,8 +21,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.nio.charset.Charset;
 
-import static capstone.NaiveBayesClassifier.readLines;
-
 public class StreamTweets {
 
     public static void main(String[] args) throws Exception {
@@ -51,8 +49,6 @@ public class StreamTweets {
         // output file, save streamed twitter data as a json file
         final File outputFile = new File("/Users/Rebecca/Desktop/spark-sandbox-master/restaurant.json");
 //        if (outputFile.exists()) {
-//            oldTweets = sqlContext[0].read().json("tweets1.json"); // load old tweets into a DataFrame
-//            oldTweets.show();
 //        }
 
         //create a DStream of tweets
@@ -68,7 +64,7 @@ public class StreamTweets {
                                 "@DukesChowder", "@PiattiSeattle", "@petitcochonsea", "@brimmerheeltap", "@rione_xiii",
                                 "@BrunswickHunt", "@coastalkitchen", "@bramlingballard", "@13CoinsSeattle", "@blueacreseafood",
                                 "@CafeMunir", "@SeatownSeabar", "@oldstovebeer", "@pikebrewing", "@SeaCoffeeWorks",
-                                "@BeechersSeattle", "@CanonSeattle", "@TheVirginiaInn"};
+                                "@BeechersSeattle", "@CanonSeattle", "@TheVirginiaInn", "@biscuitbitch"};
 
 
         //get twitter stream as a string with only english tweets and containing filters

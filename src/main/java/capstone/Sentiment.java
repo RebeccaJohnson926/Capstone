@@ -4,6 +4,7 @@ package capstone;
  * Created by Casey on 11/4/16.
  * Edited by Rebecca on 11/28/16.
  */
+
 //https://www.tutorialspoint.com/spark_sql/spark_sql_useful_resources.htm
 //https://spark.apache.org/docs/1.5.1/api/java/org/apache/spark/sql/DataFrame.html
 
@@ -25,7 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-import static capstone.NaiveBayesClassifier.readLines;
 
 public class Sentiment {
 
@@ -53,7 +53,7 @@ public class Sentiment {
 
         //train classifier
         NaiveBayes nb = new NaiveBayes();
-        nb.setChisquareCriticalValue(5.50); //0.01 pvalue   //originally set at 6.63
+        nb.setChisquareCriticalValue(4.94); //0.01 pvalue   //originally set at 6.63
         nb.train(trainingExamples);
 
         //get trained classifier knowledgeBase
@@ -81,7 +81,7 @@ public class Sentiment {
                 tweet = tweet.substring(1, tweet.length() - 1);
                 System.out.println(tweet);
 
-                String sent = nb.predict(tweet);
+                Double sent = nb.predict(tweet);
 
                 System.out.println("Sentiment Prediction: " + sent);
             }
@@ -90,6 +90,31 @@ public class Sentiment {
             System.out.println(e);
         }
 
+    }
+
+
+    /**
+     * Reads the all lines from a file and places it a String array. In each
+     * record in the String array we store a training example text.
+     *
+     * @param file
+     * @return
+     * @throws IOException
+     */
+
+    public static String[] readLines(File file) throws IOException {
+
+//        Scanner fileReader = new Scanner(file);
+        List<String> lines;
+        try (Scanner reader = new Scanner(file)) {
+            lines = new ArrayList<>();
+            String line = reader.nextLine();
+            while (reader.hasNextLine()) {
+                lines.add(line);
+                line = reader.nextLine();
+            }
+        }
+        return lines.toArray(new String[lines.size()]);
     }
 
 }

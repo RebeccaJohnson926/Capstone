@@ -31,7 +31,7 @@ public class NaiveBayesClassifier {
 
         //train classifier
         NaiveBayes nb = new NaiveBayes();
-        nb.setChisquareCriticalValue(5.50); //0.01 pvalue   //originally set at 6.63
+        nb.setChisquareCriticalValue(4.94); //0.01 pvalue   //originally set at 6.63
         nb.train(trainingExamples);
 
         //get trained classifier knowledgeBase
@@ -44,31 +44,31 @@ public class NaiveBayesClassifier {
         //Use classifier
         nb = new NaiveBayes(knowledgeBase);
         String example1 = "This is delicious!";
-        String output1 = nb.predict(example1.toLowerCase().replaceAll("[^a-zA-Z\\s]","").replaceAll("\\s+"," "));
+        Double output1 = nb.predict(example1.toLowerCase().replaceAll("[^a-zA-Z\\s]","").replaceAll("\\s+"," "));
         System.out.format("The sentence \"%s\" was classified as \"%s\".%n", example1, output1);
 
         String example2 = "This is so gross. Tastes like dirty socks. Disgusting";
-        String output2 = nb.predict(example2.toLowerCase().replaceAll("[^a-zA-Z\\s]","").replaceAll("\\s+"," "));
+        Double output2 = nb.predict(example2.toLowerCase().replaceAll("[^a-zA-Z\\s]","").replaceAll("\\s+"," "));
         System.out.format("The sentence \"%s\" was classified as \"%s\".%n", example2, output2);
 
         String example3 = "I hated my meal and the service was terrible.";
-        String output3 = nb.predict(example3.toLowerCase().replaceAll("[^a-zA-Z\\s]","").replaceAll("\\s+"," "));
+        Double output3 = nb.predict(example3.toLowerCase().replaceAll("[^a-zA-Z\\s]","").replaceAll("\\s+"," "));
         System.out.format("The sentence \"%s\" was classified as \"%s\".%n", example3, output3);
 
         String example4 = "Ew";
-        String output4 = nb.predict(example4.toLowerCase().replaceAll("[^a-zA-Z\\s]","").replaceAll("\\s+"," "));
+        Double output4 = nb.predict(example4.toLowerCase().replaceAll("[^a-zA-Z\\s]","").replaceAll("\\s+"," "));
         System.out.format("The sentence \"%s\" was classified as \"%s\".%n", example4, output4);
 
         String example5 = "This is the spot to go to for authentic Ethiopian food. The chicken is so moist and tender.";
-        String output5 = nb.predict(example5.toLowerCase().replaceAll("[^a-zA-Z\\s]","").replaceAll("\\s+"," "));
+        Double output5 = nb.predict(example5.toLowerCase().replaceAll("[^a-zA-Z\\s]","").replaceAll("\\s+"," "));
         System.out.format("The sentence \"%s\" was classified as \"%s\".%n", example5, output5);
 
         String example6 = "This is not good";
-        String output6 = nb.predict(example6.toLowerCase().replaceAll("[^a-zA-Z\\s]","").replaceAll("\\s+"," "));
+        Double output6 = nb.predict(example6.toLowerCase().replaceAll("[^a-zA-Z\\s]","").replaceAll("\\s+"," "));
         System.out.format("The sentence \"%s\" was classified as \"%s\".%n", example6, output6);
 
         String example7 = "This is not bad";
-        String output7 = nb.predict(example7.toLowerCase().replaceAll("[^a-zA-Z\\s]","").replaceAll("\\s+"," "));
+        Double output7 = nb.predict(example7.toLowerCase().replaceAll("[^a-zA-Z\\s]","").replaceAll("\\s+"," "));
         System.out.format("The sentence \"%s\" was classified as \"%s\".%n", example7, output7);
 
     }
