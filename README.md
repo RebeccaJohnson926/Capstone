@@ -1,10 +1,8 @@
 # Capstone 2017
 
-Emily Bower
-Rebecca Johnson
-Casey Kaku
+Emily Bower, Rebecca Johnson, Casey Kaku
 
-# #BirdFeed (abstract)
+# #BirdFeed (Abstract)
 
 #BirdFeed is a mobile application that allows users to view local Seattle restaurants and filter and sort restaurant data by popularity and/or cuisine. The app utilizes Spark Streaming to retrieve data from Twitter. Using a Naive Bayes Classifier, the app will calculate the sentiment of the tweet and adjusts the restaurant’s rating accordingly in a Firebase database. #BirdFeed also utilizes Android Studio, Google Play Services, and Twitter kits to present the data in a user-friendly way and provide in-app functions for the convenience of the user.
 
